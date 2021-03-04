@@ -1,7 +1,7 @@
 import csv
 
 
-with open ("titles.all", "r") as title_list:
+with open ("titles.dump", "r") as title_list:
     titles = title_list.read()
 
 with open("playlist_info.dump", "r") as yt:
