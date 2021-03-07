@@ -1,40 +1,22 @@
+import youtube_dl
 import csv
+import json
 
+ydl_options = {}
 
-with open ("titles.dump", "r") as title_list:
-    titles = title_list.read()
+with open("dump", "r") as f:
+    data  = json.load(f)
 
-with open("playlist_info.dump", "r") as yt:
-    data  = yt.read()
+data_set = []
 
-title_set = titles.split('\n')
-data_set = data.split(',')
-cleared_data_set = []
+for i in range(len(data['entries'])):
+    data_set.append([(data['entries'][i]['title']).replace('\xc2',' '),data['entries'][i]['view_count'],
+        'https://youtube.com/watch?v=' + data['entries'][i]['id']])
 
-for word in data_set:
-    if "view_count" in word:
-        cleared_data_set.append(word[15:])
-
-result = 0
-for i in cleared_data_set:
-    result += int(i)
-
-csv_arr = []
-for item in range(len(cleared_data_set)):
-    csv_arr.append([title_set[item], cleared_data_set[item]])
 
 # cp1251 for windows, utf-8 for other oses
-with open ('youtubchik_epta.csv', 'w', encoding='cp1251') as w_file:
+filename = data['title'] + '.csv'
+with open (filename, 'w', encoding='cp1251') as w_file:
     file_writer = csv.writer(w_file, delimiter = ';')
-    file_writer.writerows(csv_arr)
-
-
-# debug
-#for num in range(len(cleared_data_set)):
-#   print(num+1, " ", title_set[num], " : ", cleared_data_set[num])
-#
-#for i in csv_arr:
-#    print(i)
-#
-#
-#print(result)
+    #csv.field_size_limit(120)
+    file_writer.writerows(data_set)
